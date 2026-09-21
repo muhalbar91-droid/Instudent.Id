@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSTUDEN.ID — Platform Belajar Interaktif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--navy:#1A3A5C;--biru:#2E6DAD;--kuning:#F5A623;--hijau:#27AE7A;--bg:#F7F9FC;--dark:#2D3748;--body:#4A5568;--light:#718096;--border:#E2E8F0;--shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.1);--shadow-lg:0 10px 30px rgba(0,0,0,0.12);--r-sm:8px;--r-md:12px;--r-lg:16px;--tr:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--body);background:var(--bg);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;font-weight:600;color:var(--navy);line-height:1.3}
+a{text-decoration:none;color:var(--biru);transition:var(--tr);cursor:pointer}
+a:hover{color:var(--navy)}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:var(--r-sm);font-family:'Poppins',sans-serif;font-weight:500;font-size:14px;cursor:pointer;border:none;transition:var(--tr)}
+.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--biru);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-cta{background:var(--kuning);color:#1A1500;font-weight:600}.btn-cta:hover{background:#E09513;transform:translateY(-2px);box-shadow:0 4px 15px rgba(245,166,35,0.4)}
+.btn-outline-w{background:transparent;border:2px solid rgba(255,255,255,0.5);color:#fff}.btn-outline-w:hover{background:rgba(255,255,255,0.1);border-color:#fff}
+.btn-outline-n{background:transparent;border:2px solid var(--navy);color:var(--navy)}.btn-outline-n:hover{background:var(--navy);color:#fff}
+.btn-sm{padding:8px 16px;font-size:13px}
+.card{background:#fff;border-radius:var(--r-md);padding:24px;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:var(--tr)}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.progress{width:100%;height:8px;background:#E2E8F0;border-radius:4px;overflow:hidden}
+.progress>div{height:100%;border-radius:4px;transition:width .5s ease}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.b-kuning{background:rgba(245,166,35,0.15);color:#B7791F}
+.b-biru{background:rgba(46,109,173,0.15);color:var(--biru)}
+.b-hijau{background:rgba(39,174,122,0.15);color:#1E7A58}
+.b-merah{background:rgba(229,62,62,0.15);color:#C53030}
+.b-abu{background:#EDF2F7;color:var(--light)}
+
+/* NAVBAR */
+.navbar{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:var(--shadow-sm);padding:0 24px}
+.navbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:36px;height:36px}
+.logo-text{font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--navy)}
+.logo-sub{font-size:10px;color:var(--light);font-weight:400;display:block;margin-top:-4px}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--body);font-weight:500;font-size:14px;position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--navy)}
+.nav-links a.active::after{content:'';position:absolute;bottom:-20px;left:0;right:0;height:2px;background:var(--kuning)}
+.nav-buttons{display:flex;gap:12px;align-items:center}
+
+/* PAGE SYSTEM */
+.page-section{display:none;animation:fadeIn .4s ease}
+.page-section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* BERANDA */
+.hero{background:var(--navy);padding:80px 0;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(46,109,173,0.3) 0%,transparent 70%);border-radius:50%}
+.hero-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+.hero-title{font-size:40px;color:#fff;line-height:1.2;margin-bottom:20px}
+.hero-sub{font-size:16px;color:rgba(255,255,255,0.8);margin-bottom:32px;max-width:480px}
+.hero-btns{display:flex;gap:16px}
+.hero-card{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);border-radius:var(--r-lg);padding:28px;max-width:320px;margin-left:auto}
+.hero-card-h{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.hero-card-a{width:48px;height:48px;background:var(--kuning);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:18px}
+.hero-card-info h4{color:#fff;font-size:16px}.hero-card-info p{color:rgba(255,255,255,0.7);font-size:13px}
+.hero-card-xp{margin-top:12px}.hero-card-xp-l{display:flex;justify-content:space-between;color:rgba(255,255,255,0.8);font-size:12px;margin-bottom:6px}
+.hero-card-xp .progress>div{background:var(--kuning)}
+.section-pad{padding:80px 0}
+.sec-title{font-size:32px;text-align:center;margin-bottom:16px}
+.sec-sub{text-align:center;color:var(--light);margin-bottom:48px;max-width:600px;margin-left:auto;margin-right:auto}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step-card{text-align:center;padding:40px 24px}
+.step-icon{width:64px;height:64px;background:rgba(46,109,173,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px}
+.step-card h3{font-size:18px;margin-bottom:10px}.step-card p{font-size:14px;color:var(--light)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feature-card{padding:28px}.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.feature-card h3{font-size:16px;margin-bottom:8px}.feature-card p{font-size:14px;color:var(--light)}
+.stats-section{background:var(--navy);padding:60px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat-item{text-align:center}.stat-num{font-family:'Poppins',sans-serif;font-size:36px;font-weight:700;color:var(--kuning);margin-bottom:8px}
+.stat-lab{color:rgba(255,255,255,0.8);font-size:14px}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi-card{padding:28px}.testi-h{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.testi-a{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:16px}
+.testi-name{font-size:15px;color:var(--navy)}.testi-role{font-size:13px;color:var(--light)}
+.testi-quote{font-size:14px;color:var(--body);font-style:italic;line-height:1.7}
+.footer{background:var(--navy);padding:60px 0 30px;color:#fff}
+.footer-inner{max-width:1200px;margin:0 auto;padding:0 24px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand p{color:rgba(255,255,255,0.7);font-size:14px;margin-top:12px}
+.footer-links h4{color:#fff;font-size:14px;margin-bottom:16px}
+.footer-links ul{list-style:none}.footer-links li{margin-bottom:10px}
+.footer-links a{color:rgba(255,255,255,0.7);font-size:14px}.footer-links a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;text-align:center;color:rgba(255,255,255,0.5);font-size:13px}
+
+/* DASHBOARD */
+.dash-layout{display:flex;min-height:100vh}
+.sidebar{width:260px;background:var(--navy);color:#fff;padding:24px 0;position:fixed;height:100vh;overflow-y:auto;z-index:100}
+.sidebar-prof{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,0.1);text-align:center}
+.sidebar-a{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 12px}
+.sidebar-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;margin-bottom:2px}
+.sidebar-class{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px}
+.sidebar-xp{margin-top:12px}.sidebar-xp-l{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:6px}
+.sidebar-menu{list-style:none;padding:16px 0}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,0.8);font-size:14px;transition:var(--tr)}
+.sidebar-menu li a:hover,.sidebar-menu li a.active{background:rgba(255,255,255,0.1);color:#fff;border-left:3px solid var(--kuning)}
+.main-area{flex:1;margin-left:260px;padding:24px;background:var(--bg);min-height:100vh}
+.dash-h{margin-bottom:24px}.dash-h h1{font-size:24px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-c{background:#fff;border-radius:var(--r-md);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.stat-c-i{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.stat-c-v{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.stat-c-l{font-size:13px;color:var(--light)}
+.panel{background:#fff;border-radius:var(--r-md);padding:24px;margin-bottom:24px;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.panel h2{font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.v-card{background:#fff;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:var(--tr)}
+.v-card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.v-thumb{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.v-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);color:#fff;padding:2px 8px;border-radius:4px;font-size:12px}
+.v-info{padding:16px}.v-info h4{font-size:15px;margin-bottom:8px}
+.v-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.m-card{display:flex;align-items:center;gap:16px;padding:20px;background:#fff;border-radius:var(--r-md);border:1px solid var(--border);margin-bottom:16px;transition:var(--tr)}
+.m-card:hover{box-shadow:var(--shadow-md)}.m-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.m-info{flex:1}.m-info h4{font-size:15px;margin-bottom:4px}.m-info p{font-size:13px;color:var(--light);margin-bottom:8px}
+.m-reward{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--kuning);font-weight:600}
+.adv-map{display:flex;align-items:center;justify-content:space-between;padding:30px 20px;background:linear-gradient(135deg,#1A3A5C,#2E6DAD);border-radius:var(--r-lg);position:relative;overflow:hidden}
+.island{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.island-icon{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid}
+.island.done .island-icon{background:var(--hijau);border-color:var(--hijau);color:#fff}
+.island.on .island-icon{background:var(--kuning);border-color:var(--kuning);color:var(--navy);animation:pulse 2s infinite}
+.island.lock .island-icon{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.5)}
+.island-lab{font-size:12px;color:rgba(255,255,255,0.9);font-weight:500}
+.conn{flex:1;height:3px;background:rgba(255,255,255,0.2);margin:0 8px;position:relative;top:-14px}
+.conn.done{background:var(--hijau)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{text-align:left;padding:12px 16px;font-size:12px;color:var(--light);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+.lb-table td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border)}
+.lb-table tr:last-child td{border-bottom:none}.lb-table tr.me{background:rgba(245,166,35,0.08);border-left:3px solid var(--kuning)}
+.lb-rank{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:var(--navy);width:40px}
+.lb-a{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:12px}
+.lb-name{font-weight:500;color:var(--dark)}.lb-xp{font-weight:600;color:var(--kuning)}
+
+/* Teacher */
+.form-g{margin-bottom:16px}.form-g label{display:block;font-size:13px;font-weight:500;color:var(--dark);margin-bottom:6px}
+input,select,textarea{font-family:'Inter',sans-serif;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;width:100%;transition:var(--tr);background:#fff}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--biru);box-shadow:0 0 0 3px rgba(46,109,173,0.1)}textarea{resize:vertical}
+.t-table{width:100%;border-collapse:collapse}.t-table th,.t-table td{padding:12px 16px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
+.t-table th{font-weight:600;color:var(--dark);background:var(--bg)}
+.status{display:inline-block;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:500}
+.s-good{background:rgba(39,174,122,0.15);color:#1E7A58}.s-warn{background:rgba(245,166,35,0.15);color:#B7791F}.s-exc{background:rgba(46,109,173,0.15);color:var(--biru)}
+.chart-box{height:280px;position:relative}
+
+/* ARENA */
+.arena-h{background:var(--navy);padding:40px 0;text-align:center;color:#fff}
+.arena-h h1{color:#fff;font-size:32px;margin-bottom:8px}.arena-h p{color:rgba(255,255,255,0.8);margin-bottom:12px}
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;padding:40px 0}
+.g-card{background:#fff;border-radius:var(--r-lg);padding:28px;border:1px solid var(--border);transition:var(--tr);position:relative;overflow:hidden}
+.g-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.g-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.g-bad{position:absolute;top:16px;right:16px}
+.g-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px}
+.g-card h3{font-size:18px;margin-bottom:8px}.g-card p{font-size:14px;color:var(--light);margin-bottom:20px}
+.g-sprint::before{background:var(--kuning)}.g-duel::before{background:var(--biru)}.g-peta::before{background:var(--hijau)}
+.g-puzzle::before{background:#9F7AEA}.g-board::before{background:#ED8936}.g-daily::before{background:#E53E3E}
+.sprint-section{background:#fff;border-radius:var(--r-lg);padding:40px;margin-top:40px;border:2px solid var(--border);text-align:center}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal.on{display:flex}.modal-box{background:#fff;border-radius:var(--r-lg);padding:40px;max-width:550px;width:100%;text-align:center;box-shadow:var(--shadow-lg);animation:fadeIn .3s ease}
+.timer-bar{width:100%;height:8px;background:#E2E8F0;border-radius:4px;margin-bottom:24px;overflow:hidden}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--hijau),var(--kuning),#E53E3E);border-radius:4px;transition:width 1s linear}
+.q-box{background:var(--bg);border-radius:var(--r-md);padding:30px;margin-bottom:24px;min-height:80px;display:flex;align-items:center;justify-content:center}
+.q-text{font-family:'Poppins',sans-serif;font-size:36px;font-weight:700;color:var(--navy)}
+.ans-input{width:200px;padding:16px;font-size:24px;text-align:center;border:2px solid var(--border);border-radius:var(--r-md);font-family:'Poppins',sans-serif;font-weight:600;color:var(--navy);margin-bottom:16px}
+.ans-input:focus{border-color:var(--biru);outline:none}
+.fb-msg{font-size:20px;font-weight:600;min-height:30px;margin:12px 0}.fb-msg.ok{color:var(--hijau)}.fb-msg.no{color:#E53E3E}
+.res-box h2{font-size:28px;margin-bottom:8px}.big-score{font-family:'Poppins',sans-serif;font-size:64px;font-weight:700;color:var(--kuning);margin:16px 0}
+.xp-earn{font-size:20px;color:var(--hijau);font-weight:600;margin-bottom:8px}
+.badge-earn{display:inline-block;background:rgba(245,166,35,0.15);color:#B7791F;padding:8px 20px;border-radius:20px;font-weight:600;margin-bottom:20px}
+
+/* MATERI */
+.mat-h{background:var(--navy);padding:40px 0}
+.mat-search{max-width:600px;margin:0 auto 24px;position:relative}
+.mat-search input{padding:14px 20px 14px 48px;font-size:16px;border-radius:var(--r-lg);border:none;box-shadow:var(--shadow-md);width:100%}
+.mat-search input:focus{outline:none}
+.mat-s-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--light);font-size:18px}
+.mat-filters{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.mat-f-btn{padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-size:14px;cursor:pointer;transition:var(--tr);font-family:'Inter',sans-serif}
+.mat-f-btn:hover,.mat-f-btn.on{background:var(--kuning);border-color:var(--kuning);color:var(--navy);font-weight:600}
+.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:40px 0}
+.mat-card{background:#fff;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:var(--tr)}
+.mat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.mat-thumb{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.mat-thumb.alj{background:linear-gradient(135deg,#EBF8FF,#BEE3F8)}.mat-thumb.geo{background:linear-gradient(135deg,#F0FFF4,#C6F6D5)}
+.mat-thumb.stat{background:linear-gradient(135deg,#FFFAF0,#FEEBC8)}.mat-thumb.tri{background:linear-gradient(135deg,#FAF5FF,#E9D8FD)}
+.mat-thumb.bil{background:linear-gradient(135deg,#FFF5F5,#FED7D7)}
+.mat-bm{position:absolute;top:12px;right:12px;background:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;box-shadow:var(--shadow-sm);font-size:14px;transition:transform .2s}
+.mat-bm:hover{transform:scale(1.2)}.mat-bm.on{color:var(--kuning)}
+.mat-info{padding:20px}.mat-info h4{font-size:15px;margin-bottom:10px}
+.mat-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.mat-dur{font-size:13px;color:var(--light)}
+.lvl-dasar{color:var(--hijau)}.lvl-menengah{color:var(--kuning)}.lvl-lanjut{color:#E53E3E}
+.pop-sec{background:#fff;padding:40px 0;margin-top:20px;border-radius:var(--r-md)}
+.pop-card{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--bg);border-radius:var(--r-md);margin-bottom:12px;transition:var(--tr)}
+.pop-card:hover{box-shadow:var(--shadow-sm)}.pop-rank{font-size:24px}
+.pop-info h4{font-size:15px;margin-bottom:4px}.pop-info p{font-size:13px;color:var(--light)}
+.pop-rate{margin-left:auto;color:var(--kuning);font-size:14px}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.hero-inner{grid-template-columns:1fr;text-align:center}.hero-card{margin:0 auto}.hero-btns{justify-content:center}.sidebar{width:220px}.main-area{margin-left:220px}}
+@media(max-width:768px){.steps-grid,.features-grid,.stats-grid,.testimonials-grid,.game-grid,.mat-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.video-grid{grid-template-columns:1fr}.hero-title{font-size:28px}.nav-links{display:none}.footer-top{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.main-area{margin-left:0}.adv-map{flex-direction:column;gap:20px}.conn{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     NAVBAR GLOBAL
+     ═══════════════════════════════════════════════════════════════ -->
+<nav class="navbar" id="globalNav">
+  <div class="navbar-inner">
+    <a class="logo" onclick="goTo('beranda')">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M20 2L24.5 14.5H37.5L27 22.5L31.5 35L20 27L8.5 35L13 22.5L2.5 14.5H15.5L20 2Z" fill="#F5A623"/><circle cx="20" cy="38" r="3" fill="#2E6DAD"/></svg>
+      <div><span class="logo-text">INSTUDEN.ID</span><span class="logo-sub">Platform Belajar Interaktif</span></div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a onclick="goTo('beranda')" data-nav="beranda" class="active">Beranda</a></li>
+      <li><a onclick="goTo('materi')" data-nav="materi">Materi</a></li>
+      <li><a onclick="goTo('game')" data-nav="game">Game</a></li>
+      <li><a onclick="goTo('dashboard-siswa')" data-nav="dashboard-siswa">Dashboard</a></li>
+    </ul>
+    <div class="nav-buttons">
+      <a onclick="goTo('dashboard-siswa')" class="btn btn-navy btn-sm">Masuk sebagai Siswa</a>
+      <a onclick="goTo('dashboard-guru')" class="btn btn-outline-n btn-sm">Masuk sebagai Guru</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     1. BERANDA
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="page-section active" id="page-beranda">
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1 class="hero-title">Belajar Matematika Jadi Lebih Seru & Pintar!</h1>
+      <p class="hero-sub">Platform pembelajaran flipped classroom dengan game interaktif, video materi, dan sistem poin untuk memotivasimu setiap hari.</p>
+      <div class="hero-btns">
+        <a onclick="goTo('dashboard-siswa')" class="btn btn-cta">Mulai Belajar Gratis</a>
+        <a onclick="goTo('materi')" class="btn btn-outline-w">Lihat Demo</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-h"><div class="hero-card-a">BS</div><div class="hero-card-info"><h4>Budi Santoso</h4><p>Kelas 9A</p></div></div>
+      <div class="badge b-kuning" style="margin-bottom:12px">⭐ Level 5 — Aljabar Master</div>
+      <div class="hero-card-xp"><div class="hero-card-xp-l"><span>XP Progress</span><span>2.450 / 3.000</span></div><div class="progress"><div style="width:82%"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" style="background:#fff">
+  <div class="container">
+    <h2 class="sec-title">Cara Kerja INSTUDEN.ID</h2>
+    <p class="sec-sub">Tiga langkah sederhana untuk menguasai matematika dengan cara yang menyenangkan</p>
+    <div class="steps-grid">
+      <div class="card step-card"><div class="step-icon">🎬</div><h3>Tonton Video Sebelum Kelas</h3><p>Siswa menonton materi pembelajaran di rumah melalui video interaktif yang menarik dan mudah dipahami.</p></div>
+      <div class="card step-card"><div class="step-icon">🎮</div><h3>Main Game Matematika</h3><p>Selesaikan berbagai misi game matematika, kumpulkan XP, dan naik level untuk membuka topik baru.</p></div>
+      <div class="card step-card"><div class="step-icon">👥</div><h3>Diskusi & Praktik di Kelas</h3><p>Waktu kelas digunakan untuk kolaborasi, diskusi, dan praktik soal bersama guru dan teman sekelas.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="container">
+    <h2 class="sec-title">Fitur Unggulan</h2>
+    <p class="sec-sub">Berbagai fitur canggih yang dirancang untuk membuat belajar matematika jadi lebih efektif dan menyenangkan</p>
+    <div class="features-grid">
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(46,109,173,0.1);color:var(--biru)">🎥</div><h3>Video Pra-kelas</h3><p>Tonton materi pembelajaran sebelum tatap muka dengan video berkualitas dan penjelasan yang jelas.</p></div>
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(245,166,35,0.1);color:var(--kuning)">🎯</div><h3>Game Interaktif</h3><p>Mini-game matematika berbasis misi yang membuat belajar jadi seru dan kompetitif.</p></div>
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(39,174,122,0.1);color:var(--hijau)">🏆</div><h3>Leaderboard Kelas</h3><p>Papan peringkat real-time untuk memotivasi siswa berkompetisi secara sehat.</p></div>
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(245,166,35,0.1);color:var(--kuning)">🎖️</div><h3>Badge & XP</h3><p>Sistem penghargaan gamifikasi dengan badge, XP, dan level untuk setiap pencapaian.</p></div>
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(46,109,173,0.1);color:var(--biru)">📊</div><h3>Analitik Guru</h3><p>Pantau progres siswa per topik dengan dashboard analitik yang lengkap dan detail.</p></div>
+      <div class="card feature-card"><div class="feature-icon" style="background:rgba(39,174,122,0.1);color:var(--hijau)">🧠</div><h3>Kuis Adaptif</h3><p>Soal-soal yang menyesuaikan dengan level kemampuan siswa secara otomatis.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num" data-target="10000">0</div><div class="stat-lab">Siswa Aktif</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="500">0</div><div class="stat-lab">Video Materi</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="50">0</div><div class="stat-lab">Game Interaktif</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="98">0</div><div class="stat-lab">% Siswa Termotivasi</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" style="background:#fff">
+  <div class="container">
+    <h2 class="sec-title">Apa Kata Mereka?</h2>
+    <p class="sec-sub">Testimoni dari siswa dan guru yang telah merasakan manfaat INSTUDEN.ID</p>
+    <div class="testimonials-grid">
+      <div class="card testi-card"><div class="testi-h"><div class="testi-a" style="background:var(--biru)">AD</div><div><div class="testi-name">Ahmad Dhani</div><div class="testi-role">Siswa Kelas 9 SMP</div></div></div><p class="testi-quote">"INSTUDEN.ID bikin aku jadi suka matematika! Game-nya seru banget dan aku jadi nggak takut lagi sama soal aljabar. XP dan badge-nya bikin aku semangat belajar tiap hari."</p></div>
+      <div class="card testi-card"><div class="testi-h"><div class="testi-a" style="background:var(--hijau)">SR</div><div><div class="testi-name">Ibu Siti Rahayu</div><div class="testi-role">Guru Matematika SMA</div></div></div><p class="testi-quote">"Sebagai guru, saya sangat terbantu dengan fitur analitik INSTUDEN.ID. Saya bisa melihat topik mana yang masih sulit bagi siswa dan fokus membantu mereka di kelas."</p></div>
+      <div class="card testi-card"><div class="testi-h"><div class="testi-a" style="background:var(--kuning);color:var(--navy)">RW</div><div><div class="testi-name">Rina Wulandari</div><div class="testi-role">Siswa Kelas 11 SMA</div></div></div><p class="testi-quote">"Video pra-kelasnya sangat membantu! Sekarang saya datang ke kelas sudah paham materi, jadi waktu kelas bisa digunakan untuk latihan soal dan diskusi yang lebih mendalam."</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" id="tentang">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="logo" onclick="goTo('beranda')" style="color:#fff">
+          <svg viewBox="0 0 40 40" fill="none"><path d="M20 2L24.5 14.5H37.5L27 22.5L31.5 35L20 27L8.5 35L13 22.5L2.5 14.5H15.5L20 2Z" fill="#F5A623"/><circle cx="20" cy="38" r="3" fill="#2E6DAD"/></svg>
+          <div><span class="logo-text" style="color:#fff">INSTUDEN.ID</span><span class="logo-sub" style="color:rgba(255,255,255,0.7)">Platform Belajar Interaktif</span></div>
+        </a>
+        <p>Platform pembelajaran matematika berbasis Flipped Classroom dan Game-Based Learning untuk siswa SMP/SMA Indonesia.</p>
+      </div>
+      <div class="footer-links"><h4>Menu</h4><ul><li><a onclick="goTo('beranda')">Beranda</a></li><li><a onclick="goTo('materi')">Materi</a></li><li><a onclick="goTo('game')">Game</a></li><li><a href="#tentang">Tentang</a></li></ul></div>
+      <div class="footer-links"><h4>Akun</h4><ul><li><a onclick="goTo('dashboard-siswa')">Dashboard Siswa</a></li><li><a onclick="goTo('dashboard-guru')">Dashboard Guru</a></li><li><a onclick="goTo('game')">Arena Game</a></li></ul></div>
+      <div class="footer-links"><h4>Kontak</h4><ul><li><a href="mailto:hello@instuden.id">hello@instuden.id</a></li><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 INSTUDEN.ID. Platform Belajar Interaktif Indonesia.</p></div>
+  </div>
+</footer>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     2. DASHBOARD SISWA
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-dashboard-siswa">
+<div class="dash-layout">
+<aside class="sidebar">
+  <div class="sidebar-prof">
+    <div class="sidebar-a" style="background:var(--kuning);color:var(--navy)">BS</div>
+    <div class="sidebar-name">Budi Santoso</div>
+    <div class="sidebar-class">Kelas 9A</div>
+    <div class="badge b-kuning" style="font-size:11px">⭐ Level 5 — Aljabar Master</div>
+    <div class="sidebar-xp"><div class="sidebar-xp-l"><span>XP</span><span>2.450 / 3.000</span></div><div class="progress"><div style="width:82%;background:var(--kuning)"></div></div></div>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a class="active" onclick="goTo('dashboard-siswa')">📊 Dashboard</a></li>
+    <li><a onclick="goTo('materi')">🎥 Materi Video</a></li>
+    <li><a onclick="goTo('game')">🎮 Arena Game</a></li>
+    <li><a href="#">🎯 Misi Aktif</a></li>
+    <li><a href="#">🏆 Leaderboard</a></li>
+    <li><a href="#">👤 Profil</a></li>
+  </ul>
+</aside>
+<div class="main-area">
+  <div class="dash-h"><h1>Selamat Datang, Budi! 👋</h1><p style="color:var(--light);font-size:14px">Lanjutkan perjalanan belajarmu hari ini.</p></div>
+  <div class="stats-row">
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(245,166,35,0.1);color:var(--kuning)">⚡</div><div class="stat-c-v" style="color:var(--kuning)">+120 XP</div><div class="stat-c-l">XP Hari Ini</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(46,109,173,0.1);color:var(--biru)">🎯</div><div class="stat-c-v" style="color:var(--biru)">3/5</div><div class="stat-c-l">Misi Selesai</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(229,62,62,0.1);color:#E53E3E">🔥</div><div class="stat-c-v" style="color:#E53E3E">7 Hari</div><div class="stat-c-l">Streak Belajar</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(39,174,122,0.1);color:var(--hijau)">🏆</div><div class="stat-c-v" style="color:var(--hijau)">#4</div><div class="stat-c-l">Peringkat Kelas</div></div>
+  </div>
+  <div class="panel">
+    <h2>📚 Materi Pra-kelas Hari Ini</h2>
+    <p style="color:var(--light);font-size:14px;margin-bottom:20px">Tonton dulu sebelum kelas besok</p>
+    <div class="video-grid">
+      <div class="v-card"><div class="v-thumb" style="background:linear-gradient(135deg,#EBF8FF,#BEE3F8)">📐<span class="v-dur">12 menit</span></div><div class="v-info"><span class="badge b-biru" style="margin-bottom:8px;display:inline-block">Aljabar</span><h4>Persamaan Linear Satu Variabel</h4><div class="v-meta"><span style="font-size:13px;color:var(--light)">⏱️ 12 menit</span><a class="btn btn-navy btn-sm">Tonton</a></div></div></div>
+      <div class="v-card"><div class="v-thumb" style="background:linear-gradient(135deg,#F0FFF4,#C6F6D5)">🔢<span class="v-dur">8 menit</span></div><div class="v-info"><span class="badge b-hijau" style="margin-bottom:8px;display:inline-block">Aljabar</span><h4>Substitusi Persamaan</h4><div class="v-meta"><span style="font-size:13px;color:var(--light)">⏱️ 8 menit</span><a class="btn btn-navy btn-sm">Tonton</a></div></div></div>
+      <div class="v-card"><div class="v-thumb" style="background:linear-gradient(135deg,#FFFAF0,#FEEBC8)">✏️<span class="v-dur">15 menit</span></div><div class="v-info"><span class="badge b-kuning" style="margin-bottom:8px;display:inline-block">Latihan</span><h4>Latihan Mandiri — Aljabar</h4><div class="v-meta"><span style="font-size:13px;color:var(--light)">⏱️ 15 menit</span><a class="btn btn-navy btn-sm">Tonton</a></div></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>🎯 Misi yang Harus Diselesaikan</h2>
+    <div class="m-card"><div class="m-icon" style="background:rgba(245,166,35,0.1);color:var(--kuning)">⚔️</div><div class="m-info"><h4>Arena Aljabar — Level 3</h4><p>Selesaikan 10 soal aljabar dengan benar</p><div class="progress" style="max-width:300px"><div style="width:60%;background:var(--kuning)"></div></div></div><div class="m-reward">+150 XP</div><a onclick="goTo('game')" class="btn btn-navy btn-sm">Lanjutkan</a></div>
+    <div class="m-card"><div class="m-icon" style="background:rgba(46,109,173,0.1);color:var(--biru)">⏱️</div><div class="m-info"><h4>Sprint 60 Detik — Geometri</h4><p>Jawab sebanyak mungkin soal geometri dalam 60 detik</p><div class="progress" style="max-width:300px"><div style="width:30%;background:var(--kuning)"></div></div></div><div class="m-reward">+80 XP</div><a onclick="goTo('game')" class="btn btn-navy btn-sm">Lanjutkan</a></div>
+  </div>
+  <div class="panel">
+    <h2>🗺️ Peta Petualangan</h2>
+    <div class="adv-map">
+      <div class="island done"><div class="island-icon">✓</div><span class="island-lab">Bilangan</span></div>
+      <div class="conn done"></div>
+      <div class="island on"><div class="island-icon">📐</div><span class="island-lab">Aljabar</span></div>
+      <div class="conn"></div>
+      <div class="island lock"><div class="island-icon">🔒</div><span class="island-lab">Geometri</span></div>
+      <div class="conn"></div>
+      <div class="island lock"><div class="island-icon">🔒</div><span class="island-lab">Statistik</span></div>
+      <div class="conn"></div>
+      <div class="island lock"><div class="island-icon">🔒</div><span class="island-lab">Trigonometri</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>🏆 Leaderboard Kelas 9A</h2>
+    <table class="lb-table">
+      <thead><tr><th>Peringkat</th><th>Siswa</th><th>XP</th></tr></thead>
+      <tbody>
+        <tr><td class="lb-rank">🥇 1</td><td><div style="display:flex;align-items:center;gap:10px"><div class="lb-a" style="background:var(--kuning);color:var(--navy)">DR</div><span class="lb-name">Dewi Rahmawati</span></div></td><td class="lb-xp">3.240 XP</td></tr>
+        <tr><td class="lb-rank">🥈 2</td><td><div style="display:flex;align-items:center;gap:10px"><div class="lb-a" style="background:#A0AEC0">AP</div><span class="lb-name">Andi Pratama</span></div></td><td class="lb-xp">2.980 XP</td></tr>
+        <tr><td class="lb-rank">🥉 3</td><td><div style="display:flex;align-items:center;gap:10px"><div class="lb-a" style="background:var(--hijau)">SF</div><span class="lb-name">Siti Fatimah</span></div></td><td class="lb-xp">2.760 XP</td></tr>
+        <tr class="me"><td class="lb-rank">4</td><td><div style="display:flex;align-items:center;gap:10px"><div class="lb-a" style="background:var(--kuning);color:var(--navy)">BS</div><span class="lb-name">Budi Santoso (Kamu)</span></div></td><td class="lb-xp">2.450 XP</td></tr>
+        <tr><td class="lb-rank">5</td><td><div style="display:flex;align-items:center;gap:10px"><div class="lb-a" style="background:var(--biru)">RW</div><span class="lb-name">Rina Wulandari</span></div></td><td class="lb-xp">2.180 XP</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     3. DASHBOARD GURU
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-dashboard-guru">
+<div class="dash-layout">
+<aside class="sidebar">
+  <div class="sidebar-prof">
+    <div class="sidebar-a" style="background:var(--biru);color:#fff">SR</div>
+    <div class="sidebar-name">Ibu Siti Rahayu</div>
+    <div class="sidebar-class">Guru Matematika</div>
+    <div class="badge b-biru" style="font-size:11px">👩‍🏫 Guru Senior</div>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a class="active" onclick="goTo('dashboard-guru')">📊 Dashboard</a></li>
+    <li><a href="#">👥 Kelola Kelas</a></li>
+    <li><a href="#">📤 Upload Materi</a></li>
+    <li><a href="#">📝 Buat Soal Game</a></li>
+    <li><a href="#">📈 Analitik</a></li>
+    <li><a href="#">📢 Pengumuman</a></li>
+  </ul>
+</aside>
+<div class="main-area">
+  <div class="dash-h"><h1>Selamat Datang, Ibu Siti! 👩‍🏫</h1><p style="color:var(--light);font-size:14px">Pantau progres kelas dan kelola materi pembelajaran.</p></div>
+  <div class="stats-row">
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(46,109,173,0.1);color:var(--biru)">👥</div><div class="stat-c-v" style="color:var(--biru)">32</div><div class="stat-c-l">Total Siswa</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(245,166,35,0.1);color:var(--kuning)">🎥</div><div class="stat-c-v" style="color:var(--kuning)">24</div><div class="stat-c-l">Video Diunggah</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(39,174,122,0.1);color:var(--hijau)">📊</div><div class="stat-c-v" style="color:var(--hijau)">78</div><div class="stat-c-l">Rata-rata Skor Kelas</div></div>
+    <div class="stat-c"><div class="stat-c-i" style="background:rgba(229,62,62,0.1);color:#E53E3E">📝</div><div class="stat-c-v" style="color:#E53E3E">3</div><div class="stat-c-l">Tugas Aktif</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
+    <div class="panel" style="margin-bottom:0">
+      <h2>📤 Tambah Materi Pra-kelas</h2>
+      <form onsubmit="event.preventDefault();alert('Materi berhasil disimpan!')"><div class="form-g"><label>Pilih Topik</label><select><option>Aljabar</option><option>Geometri</option><option>Statistik</option><option>Trigonometri</option><option>Bilangan</option></select></div><div class="form-g"><label>Judul Materi</label><input type="text" placeholder="Contoh: Persamaan Linear Dua Variabel"></div><div class="form-g"><label>Upload Video</label><div style="border:2px dashed var(--border);border-radius:var(--r-sm);padding:20px;text-align:center;color:var(--light);cursor:pointer;font-size:14px">📁 Klik untuk upload video atau drag & drop</div></div><div class="form-g"><label>Deskripsi</label><textarea rows="3" placeholder="Deskripsikan materi ini..."></textarea></div><button type="submit" class="btn btn-navy" style="width:100%">Simpan Materi</button></form>
+    </div>
+    <div class="panel" style="margin-bottom:0">
+      <h2>📝 Buat Soal Game</h2>
+      <form onsubmit="event.preventDefault();alert('Soal berhasil ditambahkan ke game!')"><div class="form-g"><label>Jenis Soal</label><select><option>Pilihan Ganda</option><option>Isian</option><option>Drag-Drop</option></select></div><div class="form-g"><label>Pertanyaan</label><textarea rows="2" placeholder="Tulis pertanyaan matematika..."></textarea></div><div class="form-g"><label>Opsi Jawaban</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input placeholder="A. Jawaban 1"><input placeholder="B. Jawaban 2"><input placeholder="C. Jawaban 3"><input placeholder="D. Jawaban 4"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="form-g"><label>Kunci Jawaban</label><select><option>A</option><option>B</option><option>C</option><option>D</option></select></div><div class="form-g"><label>Poin XP</label><input type="number" value="10" min="5" max="100"></div></div><button type="submit" class="btn btn-cta" style="width:100%">Tambah ke Game</button></form>
+    </div>
+  </div>
+  <div class="panel"><h2>📈 Skor Rata-rata per Topik</h2><div class="chart-box"><canvas id="scoreChart"></canvas></div></div>
+  <div class="panel">
+    <h2>👥 Progres Siswa Kelas 9A</h2>
+    <div style="overflow-x:auto">
+      <table class="t-table">
+        <thead><tr><th>No</th><th>Nama Siswa</th><th>Video Ditonton</th><th>Skor Game</th><th>Topik Lemah</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Dewi Rahmawati</strong></td><td>18/24</td><td><strong style="color:var(--hijau)">92</strong></td><td>-</td><td><span class="status s-exc">Luar Biasa</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Dewi Rahmawati')">Lihat Detail</button></td></tr>
+          <tr><td>2</td><td><strong>Andi Pratama</strong></td><td>16/24</td><td><strong style="color:var(--hijau)">85</strong></td><td>Trigonometri</td><td><span class="status s-good">Baik</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Andi Pratama')">Lihat Detail</button></td></tr>
+          <tr><td>3</td><td><strong>Siti Fatimah</strong></td><td>15/24</td><td><strong style="color:var(--kuning)">78</strong></td><td>Geometri</td><td><span class="status s-good">Baik</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Siti Fatimah')">Lihat Detail</button></td></tr>
+          <tr><td>4</td><td><strong>Budi Santoso</strong></td><td>14/24</td><td><strong style="color:var(--kuning)">76</strong></td><td>Statistik</td><td><span class="status s-good">Baik</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Budi Santoso')">Lihat Detail</button></td></tr>
+          <tr><td>5</td><td><strong>Rina Wulandari</strong></td><td>10/24</td><td><strong style="color:#E53E3E">62</strong></td><td>Aljabar, Geometri</td><td><span class="status s-warn">Perlu Perhatian</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Rina Wulandari')">Lihat Detail</button></td></tr>
+          <tr><td>6</td><td><strong>Ahmad Dhani</strong></td><td>12/24</td><td><strong style="color:var(--kuning)">71</strong></td><td>Trigonometri</td><td><span class="status s-good">Baik</span></td><td><button class="btn btn-navy btn-sm" onclick="alert('Detail: Ahmad Dhani')">Lihat Detail</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>📢 Kirim Pengumuman ke Siswa</h2>
+    <form onsubmit="event.preventDefault();alert('Pengumuman berhasil dikirim ke semua siswa!')"><div class="form-g"><label>Judul Pengumuman</label><input type="text" placeholder="Contoh: Ujian Tengah Semester"></div><div class="form-g"><label>Isi Pengumuman</label><textarea rows="4" placeholder="Tulis pengumuman untuk siswa..."></textarea></div><button type="submit" class="btn btn-navy">Kirim ke Semua Siswa</button></form>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     4. ARENA GAME
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-game">
+<section class="arena-h">
+  <div class="container">
+    <h1>🎮 Arena Game Matematika</h1>
+    <p>Pilih tantangan dan buktikan kemampuanmu!</p>
+    <div class="game-xp-badge"><span>⭐</span><span>2.450 XP | Level 5 — Aljabar Master</span></div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="game-grid">
+      <div class="g-card g-sprint">
+        <span class="badge b-kuning g-bad">Populer</span>
+        <div class="g-icon" style="background:rgba(245,166,35,0.1);color:var(--kuning)">⏱️</div>
+        <h3>Sprint Soal</h3>
+        <p>Jawab sebanyak mungkin soal dalam 60 detik. Uji kecepatan dan ketepatanmu!</p>
+        <button class="btn btn-cta" onclick="startSprint()">▶ Mainkan</button>
+      </div>
+      <div class="g-card g-duel">
+        <span class="badge b-biru g-bad">Multiplayer</span>
+        <div class="g-icon" style="background:rgba(46,109,173,0.1);color:var(--biru)">⚔️</div>
+        <h3>Duel Matematika</h3>
+        <p>Tantang teman sekelas dalam pertandingan 1v1 real-time. Siapa yang lebih cepat?</p>
+        <button class="btn btn-secondary" style="background:var(--biru);color:#fff" onclick="alert('Fitur Duel sedang dalam pengembangan!')">Cari Lawan</button>
+      </div>
+      <div class="g-card g-peta">
+        <span class="badge b-hijau g-bad">Story Mode</span>
+        <div class="g-icon" style="background:rgba(39,174,122,0.1);color:var(--hijau)">🗺️</div>
+        <h3>Peta Petualangan</h3>
+        <p>Jelajahi topik matematika dan taklukkan setiap wilayah. Kumpulkan semua badge!</p>
+        <button class="btn btn-navy" onclick="alert('Lanjutkan petualanganmu!')">Lanjutkan</button>
+      </div>
+      <div class="g-card g-puzzle">
+        <span class="badge b-abu g-bad">Puzzle</span>
+        <div class="g-icon" style="background:rgba(159,122,234,0.1);color:#9F7AEA">🧩</div>
+        <h3>Puzzle Angka</h3>
+        <p>Susun angka dan operasi matematika yang tepat untuk menyelesaikan teka-teki.</p>
+        <button class="btn btn-navy" onclick="alert('Puzzle Angka segera hadir!')">Mainkan</button>
+      </div>
+      <div class="g-card g-board">
+        <span class="badge b-biru g-bad">Multiplayer</span>
+        <div class="g-icon" style="background:rgba(237,137,54,0.1);color:#ED8936">🎲</div>
+        <h3>Board Game Digital</h3>
+        <p>Jawab soal untuk maju di papan permainan bersama teman. Siapa yang sampai finish?</p>
+        <button class="btn btn-navy" onclick="alert('Buat ruangan multiplayer!')">Buat Ruangan</button>
+      </div>
+      <div class="g-card g-daily">
+        <span class="badge b-merah g-bad">🔥 Bonus 2x XP</span>
+        <div class="g-icon" style="background:rgba(229,62,62,0.1);color:#E53E3E">📅</div>
+        <h3>Tantangan Harian</h3>
+        <p>Tantangan baru setiap hari dengan bonus XP 2x! Jangan sampai ketinggalan.</p>
+        <button class="btn btn-cta" onclick="alert('Tantangan hari ini: Selesaikan 15 soal Aljabar!')">Ikuti Sekarang</button>
+      </div>
+    </div>
+    <div class="sprint-section">
+      <h2 style="margin-bottom:8px">⚡ Sprint Soal — Mini Game</h2>
+      <p style="color:var(--light);margin-bottom:24px">Coba sekarang! Jawab sebanyak mungkin soal dalam 60 detik.</p>
+      <button class="btn btn-cta" style="font-size:18px;padding:16px 48px" onclick="startSprint()">▶ Coba Sprint Soal Sekarang</button>
+    </div>
+  </div>
+</section>
+
+<!-- Sprint Modal -->
+<div class="modal" id="sprintModal">
+  <div class="modal-box" id="sprintBox">
+    <div id="sprintStart">
+      <h2 style="font-size:28px;margin-bottom:12px">⚡ Sprint Soal</h2>
+      <p style="color:var(--light);margin-bottom:24px">Jawab sebanyak mungkin soal matematika dalam <strong>60 detik</strong>!</p>
+      <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px">
+        <div style="text-align:center"><div style="font-size:32px;font-weight:700;color:var(--navy)">+10</div><div style="font-size:13px;color:var(--light)">per benar</div></div>
+        <div style="text-align:center"><div style="font-size:32px;font-weight:700;color:#E53E3E">0</div><div style="font-size:13px;color:var(--light)">per salah</div></div>
+      </div>
+      <button class="btn btn-cta" style="padding:14px 40px;font-size:16px" onclick="beginSprint()">▶ Mulai Game</button>
+    </div>
+    <div id="sprintGame" style="display:none">
+      <div class="timer-bar"><div class="timer-fill" id="timerBar" style="width:100%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px"><span style="font-size:14px;color:var(--light)">Soal ke-<span id="questionNum">1</span></span><span style="font-size:14px;color:var(--light)">Skor: <strong id="currentScore" style="color:var(--navy)">0</strong></span></div>
+      <div class="q-box"><div class="q-text" id="questionText">Siap?</div></div>
+      <div class="fb-msg" id="feedbackMsg"></div>
+      <input type="number" class="ans-input" id="answerInput" placeholder="?" autocomplete="off">
+      <br><button class="btn btn-navy" style="padding:14px 40px;font-size:16px" onclick="submitAnswer()">Jawab</button>
+      <p style="font-size:12px;color:var(--light);margin-top:12px">Tekan Enter untuk menjawab</p>
+    </div>
+    <div id="sprintResult" style="display:none">
+      <div class="res-box">
+        <h2>🎉 Selesai!</h2>
+        <div class="big-score" id="finalScore">0</div>
+        <div class="xp-earn" id="xpEarned">+0 XP</div>
+        <div class="badge-earn" id="badgeEarned" style="display:none">🏆 Sprint Master</div>
+        <p style="color:var(--light);margin-bottom:20px" id="resultMessage">Kerja bagus!</p>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button class="btn btn-cta" onclick="beginSprint()">▶ Main Lagi</button>
+          <button class="btn btn-outline-n" onclick="closeSprint()">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     5. MATERI
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-materi">
+<section class="mat-h">
+  <div class="container" style="text-align:center">
+    <h1 style="color:#fff;font-size:32px;margin-bottom:8px">📚 Perpustakaan Materi</h1>
+    <p style="color:rgba(255,255,255,0.8);margin-bottom:24px">Temukan materi matematika untuk setiap topik dan level</p>
+    <div class="mat-search">
+      <span class="mat-s-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari materi matematika..." onkeyup="filterMateri()">
+    </div>
+    <div class="mat-filters">
+      <button class="mat-f-btn on" onclick="filterByTopic('all',this)">Semua</button>
+      <button class="mat-f-btn" onclick="filterByTopic('aljabar',this)">Aljabar</button>
+      <button class="mat-f-btn" onclick="filterByTopic('geometri',this)">Geometri</button>
+      <button class="mat-f-btn" onclick="filterByTopic('statistik',this)">Statistik</button>
+      <button class="mat-f-btn" onclick="filterByTopic('trigonometri',this)">Trigonometri</button>
+      <button class="mat-f-btn" onclick="filterByTopic('bilangan',this)">Bilangan</button>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="mat-grid" id="materiGrid">
+      <div class="mat-card" data-topic="aljabar">
+        <div class="mat-thumb alj">📐<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-biru">Aljabar</span><h4>Persamaan Linear Satu Variabel</h4><div class="mat-meta"><span class="mat-dur">⏱️ 12 menit</span><span class="lvl-dasar" style="font-size:13px;font-weight:600">● Dasar</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="aljabar">
+        <div class="mat-thumb alj">📊<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-biru">Aljabar</span><h4>Sistem Persamaan Linear</h4><div class="mat-meta"><span class="mat-dur">⏱️ 18 menit</span><span class="lvl-menengah" style="font-size:13px;font-weight:600">● Menengah</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="geometri">
+        <div class="mat-thumb geo">📏<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-hijau">Geometri</span><h4>Teorema Pythagoras</h4><div class="mat-meta"><span class="mat-dur">⏱️ 15 menit</span><span class="lvl-menengah" style="font-size:13px;font-weight:600">● Menengah</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="geometri">
+        <div class="mat-thumb geo">🔷<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-hijau">Geometri</span><h4>Luas dan Keliling Bangun Datar</h4><div class="mat-meta"><span class="mat-dur">⏱️ 10 menit</span><span class="lvl-dasar" style="font-size:13px;font-weight:600">● Dasar</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="statistik">
+        <div class="mat-thumb stat">📈<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-kuning">Statistik</span><h4>Statistika Dasar: Mean, Median, Modus</h4><div class="mat-meta"><span class="mat-dur">⏱️ 20 menit</span><span class="lvl-menengah" style="font-size:13px;font-weight:600">● Menengah</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="aljabar">
+        <div class="mat-thumb alj">📉<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-biru">Aljabar</span><h4>Fungsi dan Grafik</h4><div class="mat-meta"><span class="mat-dur">⏱️ 22 menit</span><span class="lvl-lanjut" style="font-size:13px;font-weight:600">● Lanjutan</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="bilangan">
+        <div class="mat-thumb bil">🔢<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-merah">Bilangan</span><h4>Bilangan Bulat dan Operasinya</h4><div class="mat-meta"><span class="mat-dur">⏱️ 8 menit</span><span class="lvl-dasar" style="font-size:13px;font-weight:600">● Dasar</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="trigonometri">
+        <div class="mat-thumb tri">📐<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-abu" style="background:rgba(128,90,213,0.15);color:#805AD5">Trigonometri</span><h4>Trigonometri Dasar</h4><div class="mat-meta"><span class="mat-dur">⏱️ 25 menit</span><span class="lvl-lanjut" style="font-size:13px;font-weight:600">● Lanjutan</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+      <div class="mat-card" data-topic="statistik">
+        <div class="mat-thumb stat">🎲<button class="mat-bm" onclick="toggleBookmark(this)">🔖</button></div>
+        <div class="mat-info"><span class="badge b-kuning">Statistik</span><h4>Peluang dan Kombinasi</h4><div class="mat-meta"><span class="mat-dur">⏱️ 16 menit</span><span class="lvl-menengah" style="font-size:13px;font-weight:600">● Menengah</span></div><a class="btn btn-navy btn-sm" style="width:100%;margin-top:12px">Tonton Sekarang</a></div>
+      </div>
+    </div>
+    <div class="pop-sec">
+      <h2 style="font-size:24px;margin-bottom:24px;text-align:center">🔥 Materi Terpopuler</h2>
+      <div class="pop-card"><span class="pop-rank">🥇</span><div class="pop-info"><h4>Persamaan Linear Satu Variabel</h4><p>👁️ 12.450 penonton • ⭐ 4.9</p></div><div class="pop-rate">⭐⭐⭐⭐⭐</div></div>
+      <div class="pop-card"><span class="pop-rank">🥈</span><div class="pop-info"><h4>Teorema Pythagoras</h4><p>👁️ 10.820 penonton • ⭐ 4.8</p></div><div class="pop-rate">⭐⭐⭐⭐⭐</div></div>
+      <div class="pop-card"><span class="pop-rank">🥉</span><div class="pop-info"><h4>Statistika Dasar: Mean, Median, Modus</h4><p>👁️ 9.340 penonton • ⭐ 4.7</p></div><div class="pop-rate">⭐⭐⭐⭐⭐</div></div>
+    </div>
+  </div>
+</section>
+</section>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+function goTo(page) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navLink = document.querySelector('.nav-links a[data-nav="' + page + '"]');
+  if (navLink) navLink.classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'dashboard-guru') initChart();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED COUNTERS (Beranda)
+   ═══════════════════════════════════════════════════════════════ */
+function animateCounter(el) {
+  const target = parseInt(el.getAttribute('data-target'));
+  const duration = 2000, start = performance.now();
+  function update(t) {
+    const p = Math.min((t - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const cur = Math.floor(ease * target);
+    el.textContent = target >= 1000 ? cur.toLocaleString('id-ID') + '+' : (target === 98 ? cur + '%' : cur + '+');
+    if (p < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting && e.target.classList.contains('stat-num')) { animateCounter(e.target); obs.unobserve(e.target); } });
+}, { threshold: 0.2 });
+document.querySelectorAll('.stat-num').forEach(el => obs.observe(el));
+
+/* ═══════════════════════════════════════════════════════════════
+   CHART.JS — Dashboard Guru
+   ═══════════════════════════════════════════════════════════════ */
+let chartInited = false;
+function initChart() {
+  if (chartInited) return;
+  const ctx = document.getElementById('scoreChart');
+  if (!ctx) return;
+  new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Bilangan', 'Aljabar', 'Geometri', 'Statistik', 'Trigonometri'],
+      datasets: [{
+        label: 'Skor Rata-rata Kelas',
+        data: [82, 78, 71, 75, 68],
+        backgroundColor: ['rgba(46,109,173,0.8)', 'rgba(245,166,35,0.8)', 'rgba(39,174,122,0.8)', 'rgba(229,62,62,0.8)', 'rgba(128,90,213,0.8)'],
+        borderRadius: 8, borderSkipped: false
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } }
+  });
+  chartInited = true;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPRINT GAME — Arena
+   ═══════════════════════════════════════════════════════════════ */
+const soalDB = [
+  {q:"5 + 7 = ?",a:12},{q:"15 - 8 = ?",a:7},{q:"6 × 4 = ?",a:24},{q:"36 ÷ 6 = ?",a:6},
+  {q:"9 + 14 = ?",a:23},{q:"50 - 23 = ?",a:27},{q:"7 × 8 = ?",a:56},{q:"81 ÷ 9 = ?",a:9},
+  {q:"12 + 19 = ?",a:31},{q:"100 - 37 = ?",a:63},{q:"8 × 7 = ?",a:56},{q:"64 ÷ 8 = ?",a:8},
+  {q:"23 + 17 = ?",a:40},{q:"45 - 18 = ?",a:27},{q:"9 × 6 = ?",a:54},{q:"72 ÷ 9 = ?",a:8},
+  {q:"x + 5 = 12, x = ?",a:7},{q:"3x = 21, x = ?",a:7},{q:"x - 8 = 15, x = ?",a:23},
+  {q:"2x + 4 = 14, x = ?",a:5},{q:"x ÷ 3 = 6, x = ?",a:18},{q:"5x - 3 = 22, x = ?",a:5},
+  {q:"x + 12 = 30, x = ?",a:18},{q:"4x = 32, x = ?",a:8},{q:"x - 7 = 9, x = ?",a:16},
+  {q:"3x + 6 = 24, x = ?",a:6},{q:"x ÷ 5 = 4, x = ?",a:20},{q:"2x - 5 = 11, x = ?",a:8},
+  {q:"x + 9 = 25, x = ?",a:16},{q:"6x = 42, x = ?",a:7}
+];
+let gs = {score:0,timeLeft:60,timer:null,q:null,qc:0,cc:0,wc:0,playing:false};
+function startSprint() {
+  document.getElementById('sprintModal').classList.add('on');
+  document.getElementById('sprintStart').style.display='block';
+  document.getElementById('sprintGame').style.display='none';
+  document.getElementById('sprintResult').style.display='none';
+}
+function closeSprint() { document.getElementById('sprintModal').classList.remove('on'); stopTimer(); }
+function beginSprint() {
+  gs={score:0,timeLeft:60,timer:null,q:null,qc:0,cc:0,wc:0,playing:true};
+  document.getElementById('sprintStart').style.display='none';
+  document.getElementById('sprintGame').style.display='block';
+  document.getElementById('sprintResult').style.display='none';
+  document.getElementById('currentScore').textContent='0';
+  document.getElementById('feedbackMsg').textContent=''; document.getElementById('feedbackMsg').className='fb-msg';
+  document.getElementById('answerInput').value=''; document.getElementById('answerInput').focus();
+  nextQ(); startT();
+}
+function startT() {
+  const bar = document.getElementById('timerBar'); bar.style.width='100%';
+  gs.timer = setInterval(()=>{gs.timeLeft--; bar.style.width=((gs.timeLeft/60)*100)+'%'; if(gs.timeLeft<=0)endGame();},1000);
+}
+function stopTimer() { if(gs.timer){clearInterval(gs.timer);gs.timer=null;} }
+function nextQ() {
+  const i = Math.floor(Math.random()*soalDB.length);
+  gs.q=soalDB[i]; gs.qc++;
+  document.getElementById('questionText').textContent=gs.q.q;
+  document.getElementById('questionNum').textContent=gs.qc;
+  document.getElementById('answerInput').value=''; document.getElementById('answerInput').focus();
+  document.getElementById('feedbackMsg').textContent=''; document.getElementById('feedbackMsg').className='fb-msg';
+}
+function submitAnswer() {
+  if(!gs.playing)return;
+  const input=document.getElementById('answerInput');
+  const ans=parseInt(input.value); const fb=document.getElementById('feedbackMsg');
+  if(isNaN(ans)){fb.textContent='Masukkan jawaban!';fb.className='fb-msg no';return;}
+  if(ans===gs.q.a){gs.score+=10;gs.cc++;fb.textContent='Benar! ✓';fb.className='fb-msg ok';}
+  else{gs.wc++;fb.textContent='Salah ✗ Jawaban: '+gs.q.a;fb.className='fb-msg no';}
+  document.getElementById('currentScore').textContent=gs.score;
+  localStorage.setItem('sprintLastScore',gs.score);
+  setTimeout(()=>{if(gs.playing)nextQ();},800);
+}
+function endGame() {
+  stopTimer(); gs.playing=false;
+  document.getElementById('sprintGame').style.display='none';
+  document.getElementById('sprintResult').style.display='block';
+  const fs=gs.score, xp=fs;
+  document.getElementById('finalScore').textContent=fs;
+  document.getElementById('xpEarned').textContent='+'+xp+' XP';
+  const be=document.getElementById('badgeEarned'), me=document.getElementById('resultMessage');
+  if(fs>=80){be.textContent='🏆 Sprint Legend';be.style.display='inline-block';me.textContent='Luar biasa! Kamu adalah legenda sprint!';}
+  else if(fs>=50){be.textContent='⭐ Sprint Expert';be.style.display='inline-block';me.textContent='Hebat! Pertahankan performamu!';}
+  else if(fs>=20){be.textContent='🥉 Sprint Starter';be.style.display='inline-block';me.textContent='Bagus! Terus berlatih untuk hasil lebih baik.';}
+  else{be.style.display='none';me.textContent='Jangan menyerah! Coba lagi dan tingkatkan skormu.';}
+  const hs=parseInt(localStorage.getItem('sprintHighScore')||'0');
+  if(fs>hs){localStorage.setItem('sprintHighScore',fs);me.textContent+=' (High Score Baru!)';}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&gs.playing)submitAnswer(); if(e.key==='Escape')closeSprint();});
+document.getElementById('sprintModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSprint();});
+
+/* ═══════════════════════════════════════════════════════════════
+   MATERI FILTER
+   ═══════════════════════════════════════════════════════════════ */
+let curFilter='all';
+function filterByTopic(topic,btn){
+  curFilter=topic;
+  document.querySelectorAll('.mat-f-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); applyF();
+}
+function filterMateri(){applyF();}
+function applyF(){
+  const term=document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.mat-card').forEach(c=>{
+    const t=c.getAttribute('data-topic'), title=c.querySelector('h4').textContent.toLowerCase();
+    c.style.display=(curFilter==='all'||t===curFilter)&&title.includes(term)?'block':'none';
+    if(c.style.display==='block')c.style.animation='fadeIn .4s ease';
+  });
+}
+function toggleBookmark(btn){
+  btn.classList.toggle('on');
+  btn.textContent=btn.classList.contains('on')?'📌':'🔖';
+  btn.style.color=btn.classList.contains('on')?'var(--kuning)':'';
+}
+</script>
+</body>
+</html>
